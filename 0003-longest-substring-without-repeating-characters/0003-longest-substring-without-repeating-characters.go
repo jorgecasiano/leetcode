@@ -1,27 +1,35 @@
 func lengthOfLongestSubstring(s string) int {
-	lastIndexChar := make(map[rune]int)
-	longestSub := 0
-	currentSub := 0
-	start := 0
+	visited := make(map[byte]bool)
+	left := 0
+	longest := 0
+	current := 0
 	
-	for index, char := range s {
-		lastIndex, found := lastIndexChar[char]
-		if !found || lastIndex < index - currentSub {
-			currentSub++
-		} else {
-			if currentSub > longestSub {
-				longestSub = currentSub
+	for right := 0; right < len(s); right++ {
+		if found := visited[s[right]]; found {
+			for {
+				delete(visited, s[left])
+				leftUpdated := s[left] == s[right]
+				left++
+				if leftUpdated {
+					break
+				}
 			}
-
-			start = lastIndex + 1
-			currentSub = index - start + 1
+			longest = max(longest, current)
+			current = right - left
 		}
-		lastIndexChar[char] = index
+
+		visited[s[right]] = true
+		current++
 	}
 
-	if currentSub > longestSub {
-		longestSub = currentSub
-	}
+	longest = max(longest, current)
 
-	return longestSub
+	return longest
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
 }
