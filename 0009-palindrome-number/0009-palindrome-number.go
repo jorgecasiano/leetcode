@@ -1,13 +1,16 @@
 func isPalindrome(x int) bool {
-	s := strconv.Itoa(x)
-	l, r := 0, len(s) - 1
-	for l < r {
-		if s[l] != s[r] {
-			return false
-		}
-		l++
-		r--
+	// exclude negatives, zero and numbers ending in zero
+	if x < 0 || (x != 0 && x % 10 == 0) {
+		return false
 	}
 
-	return true
+	reverse := 0
+	for x > reverse {
+		reverse = reverse * 10 + x % 10;
+		x = x / 10;
+	}
+
+	// x == reverse -> for even palindromes
+	// x == reverse / 10 -> for odd palindromes
+	return x == reverse || x == reverse / 10;
 }
