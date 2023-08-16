@@ -1,33 +1,36 @@
 func longestPalindrome(s string) string {
-	sBytes := []byte(s)
-	var res []byte
+	var l, r, maxLen int
 
-	for i := 0; i < len(sBytes); i++ {
-		resEven := findPalindrome(sBytes, i, i)
-		resOdd := findPalindrome(sBytes, i, i + 1)
+	for i := 0; i < len(s); i++ {
+		lEven, rEven := findPalindrome(s, i, i)
+		lOdd, rOdd := findPalindrome(s, i, i + 1)
 
-		if len(resEven) > len(res) {
-			res = resEven
+		currentLength := calcLength(lEven, rEven)
+		if currentLength > maxLen {
+			maxLen = currentLength
+			l, r = lEven, rEven
 		}
 
-		if len(resOdd) > len(res) {
-			res = resOdd
+		currentLength = calcLength(lOdd, rOdd)
+		if currentLength > maxLen {
+			maxLen = currentLength
+			l, r = lOdd, rOdd
 		}
 	}
 
-	return string(res)
+	return string(s[l:r+1])
 }
 
-func findPalindrome(s []byte, i int, right int) []byte {
-	var res []byte
+func findPalindrome(s string, i int, right int) (int, int) {
 	l, r := i, right
 	for l >= 0 && r < len(s) && s[l] == s[r] {
-		if (r - l + 1) > len(res) {
-			res = s[l:r+1]
-		}
 		l--
 		r++
 	}
 
-	return res
+	return l + 1, r - 1
+}
+
+func calcLength(l int, r int) int {
+	return r - l + 1
 }
