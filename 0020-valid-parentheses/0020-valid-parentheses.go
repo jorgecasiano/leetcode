@@ -1,8 +1,7 @@
 func isValid(s string) bool {
-    if len(s) % 2 == 1 {
+	if len(s) % 2 == 1 {
         return false
     }
-    
 	symbolsRune := []rune("[](){}")
 	symbols := map[rune]rune{
 		symbolsRune[1]: symbolsRune[0],
@@ -10,26 +9,23 @@ func isValid(s string) bool {
 		symbolsRune[5]: symbolsRune[4],
 	}
 
-	size, maxSize := 0, len(s) / 2
-	stack := make([]rune, maxSize)
+	var stack []rune
 	for _, symbol := range s {
-		if size < 0 || size > maxSize  {
-			return false
-		}
 		val, found := symbols[symbol]
 		if found {
-			if size == 0 || stack[size - 1] != val {
+			if len(stack) == 0 || stack[last(stack)] != val {
 				return false
 			}
 
-			size--
-		} else if size < maxSize {            
-			stack[size] = symbol
-			size++
+			stack = stack[:last(stack)]
 		} else {
-			return false
+			stack = append(stack, symbol)
 		}
 	}
 
-	return size == 0
+	return len(stack) == 0
+}
+
+func last(arr []rune) int {
+	return len(arr) - 1
 }
