@@ -1,39 +1,3 @@
-type (
-	Stack struct {
-		top *node
-		length int
-	}
-	node struct {
-		value interface{}
-		prev *node
-	}	
-)
-// Create a new stack
-func New() *Stack {
-	return &Stack{nil,0}
-}
-// Return the number of items in the stack
-func (this *Stack) Len() int {
-	return this.length
-}
-// Pop the top item of the stack and return it
-func (this *Stack) Pop() interface{} {
-	if this.length == 0 {
-		return nil
-	}
-	
-	n := this.top
-	this.top = n.prev
-	this.length--
-	return n.value
-}
-// Push a value onto the top of the stack
-func (this *Stack) Push(value interface{}) {
-	n := &node{value,this.top}
-	this.top = n
-	this.length++
-}
-
 const symbols = "[({])}"
 
 func isValid(s string) bool {
@@ -49,28 +13,25 @@ func isValid(s string) bool {
 		symbols[5]: 2,
 	}
 
-	var stack = New()
+	var stack []byte
 
 	for i := 0; i < len(s); i++ {
 		val, found := closeSymbols[s[i]]
 		if found {
-			if stack.Len() == 0 {
+			if len(stack) == 0 || openSymbols[stack[len(stack)-1]] != val {
 				return false
 			}
 
-			curr := stack.Pop().(byte)
-			if openSymbols[curr] != val {
-				return false
-			}
+			stack = stack[:len(stack)-1]
 		} else {
 			_, found = openSymbols[s[i]]
 			if found {
-				stack.Push(s[i])
+				stack = append(stack, s[i])
 			} else {
 				return false
 			}
 		}
 	}
 
-	return stack.Len() == 0
+	return len(stack) == 0
 }
