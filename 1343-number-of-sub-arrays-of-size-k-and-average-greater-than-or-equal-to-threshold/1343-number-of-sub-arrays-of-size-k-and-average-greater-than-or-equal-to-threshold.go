@@ -1,21 +1,29 @@
 func numOfSubarrays(arr []int, k int, threshold int) int {
-    var i, j, acc, sum int
-	var fullWindow = false
-    
+	j := k - 1
+	sum := sumFirstN(arr, j)
+
+	var i, acc int
+
 	for j < len(arr) {
 		sum += arr[j]
-		if fullWindow || (j - i + 1 == k) {
-			fullWindow = true
-			if sum / k >= threshold {
-				acc++
-			}
 
-			sum -= arr[i]
-			i++
+		if sum / k >= threshold {
+			acc++
 		}
 
+		sum -= arr[i]
+		i++
 		j++
 	}
 
 	return acc
+}
+
+func sumFirstN(arr []int, n int) int {
+	sum := 0
+	for i := 0; i < n; i++ {
+		sum += arr[i]
+	}
+
+	return sum
 }
