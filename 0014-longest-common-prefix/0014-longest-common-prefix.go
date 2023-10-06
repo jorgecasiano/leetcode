@@ -3,15 +3,15 @@ func longestCommonPrefix(strs []string) string {
 		return strs[0]
 	}
 
-	pos := 0
-	for pos < len(strs[0]) {
-		for i := 1; i < len(strs); i++ {
-			if pos == len(strs[i-1]) || pos == len(strs[i]) || strs[i-1][pos] != strs[i][pos] {
-				return strs[0][0:pos]
-			}
-		}
+	sort.Strings(strs)
+	first := strs[0]
+	last := strs[len(strs) - 1]
+	min := int(math.Min(float64(len(first)), float64(len(last))))
 
-		pos++
+	for i := 0; i < min; i++ {
+		if first[i] != last[i] {
+			return first[0:i]
+		}
 	}
 
 	return strs[0]
